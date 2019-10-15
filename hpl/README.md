@@ -17,6 +17,7 @@
 ### 1. Download HPL
     cd ~
     wget https://www.netlib.org/benchmark/hpl/hpl-2.3.tar.gz
+    # unzip the .tar.gz file
     mv hpl-2.3 hpl
 
 ### 2. Generate HPL template conffile
@@ -71,6 +72,10 @@
 	8            memory alignment in double (> 0)
 ##### Execute HPL program
     ./xhpl
+
+##### Execute HPL program on multiple node
+    # change the value of Ps and Qs likes Ps=2, Qs=4
+    mpiexec -n 8 ./xhpl
 
 ##### The output will be something like:
 	================================================================================
@@ -136,7 +141,4 @@
 
 	End of Tests.
 	================================================================================
-	
-##### Execute HPL program on multiple node
-    # change the value of Ps and Qs likes Ps=2, Qs=4
-    mpiexec -n 8 ./xhpl
+
