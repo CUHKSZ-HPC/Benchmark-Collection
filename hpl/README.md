@@ -9,7 +9,7 @@
 * [HPL Official Q&A](https://www.netlib.org/benchmark/hpl/faqs.html)
 
 ### Installation Environment:
-    Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox
+    Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox, 2GB Memory
 
 ### 0. Install dependency
     sudo apt-get install -y libatlas-base-dev mpich libmpich-dev gfortran

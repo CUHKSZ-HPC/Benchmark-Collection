@@ -7,7 +7,7 @@
 * The installation of HPCG is exactly the same way as HPL. For people who meet troubles in installing HPCG, you can have a try to install HPL first.
 
 ### Installation Environment:
-    Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox
+    Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox, 2GB Memory
 
 ### 0. Install dependency
     sudo apt-get install -y mpich libmpich-dev
