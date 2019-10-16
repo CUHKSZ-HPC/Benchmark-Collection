@@ -2,13 +2,13 @@
 
 ### Related Website:
 * [Falcon Installation Reference](https://github.com/PacificBiosciences/FALCON-integrate/wiki/Installation)
-* Memory is a important issue. If you memory is not large enough, you will got [LAmerge: Out of memory](https://github.com/PacificBiosciences/FALCON-integrate/issues/119) error. 
+* Memory is a important issue. If you memory is not large enough, you will get [LAmerge: Out of memory](https://github.com/PacificBiosciences/FALCON-integrate/issues/119) error. 
 
 ### Installation Environment:
     Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox, 6GB Memory
 
 ### 0. Install dependency
-    sudo apt-get install -y git nim python-dev curl
+    sudo apt install -y git nim python-dev curl
 
 ### 1. Follow the Instruction in [Falcon Installation Reference](https://github.com/PacificBiosciences/FALCON-integrate/wiki/Installation)
     export GIT_SYM_CACHE_DIR=~/.git-sym-cache # to speed things up
