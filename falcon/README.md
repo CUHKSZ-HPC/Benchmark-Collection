@@ -6,6 +6,7 @@
 
 ### Installation Environment:
     Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox, 6GB Memory
+    Ubuntu 16.04.6 LTS, 4.4.0-166-generic, x86_64, Server
 
 ### 0. Install dependency
     sudo apt install -y git nim python-dev curl
@@ -15,11 +16,19 @@
     git clone git://github.com/PacificBiosciences/FALCON-integrate.git
     cd FALCON-integrate
     git checkout develop
-    git submodule update --init --recursive
+    git submodule update --init --recursive	
+    	# This is crazily time-consuming, you may want to `cp` a existing local repo instead
     make init
     source env.sh
     make config-edit-user
     make -j all
+
+### 1.1 If you use `cp` instead of `git submodule update` in *1.*
+A symbolic link may lost in this process. Check and repair it by:
+```bash
+cd FALCON-examples/run/synth0/data
+ln -s ../../../.git-sym/synth5k.2016-11-02 synth5k
+```
 
 ### 2. Run a simple test
     source env.sh
