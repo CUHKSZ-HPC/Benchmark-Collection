@@ -57,7 +57,7 @@ ln -s _hpccinf.txt hpccinf.txt
 
 ```bash
 # Working Dir: hpcc-1.5.0/
-mpiexec -n 4 ./xhpl
+mpiexec -n 4 ./hpcc
 # These Files will be Generated:
 	# hpcc-1.5.0/hpccoutf.txt		# Output File
 ```
