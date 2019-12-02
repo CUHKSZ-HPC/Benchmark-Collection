@@ -12,7 +12,7 @@
 
 ### 0. Install dependency
 
-    sudo apt-get install -y libatlas-base-dev mpich libmpich-dev gfortran
+    sudo apt-get install -y libatlas-base-dev libmpich-dev
 
 ### 1. Download HPCC
 

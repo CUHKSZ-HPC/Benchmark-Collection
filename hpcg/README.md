@@ -10,7 +10,7 @@
     Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox, 2GB Memory, HPCG 3.1
 
 ### 0. Install dependency
-    sudo apt-get install -y mpich libmpich-dev
+    sudo apt-get install -y libmpich-dev
 
 ### 1. Download HPCG
     cd ~
