@@ -24,9 +24,9 @@
 # Working Dir: hpcc-1.5.0/hpl/setup
 sh make_generic
 cp Make.UNKNOWN ../Make.linux
+# These Files will be Generated:
+	# hpcc-1.5.0/hpl/Make.linux		# Compilation Configuration File
 ```
-
-* An configuration file `hpcc-1.5.0/hpl/Make.linux` will be generated.
 
 ### 3. Modify `Make.linux` according to the text below
 
@@ -40,9 +40,9 @@ cp Make.UNKNOWN ../Make.linux
 ```bash
 # Working Dir: hpcc-1.5.0/
 make arch=linux -j $(nproc)
+# These Files will be Generated:
+	# hpcc-1.5.0/hpcc		# Executable File
 ```
-
-* An executable file `hpcc-1.5.0/hpcc` will be generated.
 
 ### 5. Execute HPCC
 
@@ -58,6 +58,6 @@ ln -s _hpccinf.txt hpccinf.txt
 ```bash
 # Working Dir: hpcc-1.5.0/
 mpiexec -n 4 ./xhpl
+# These Files will be Generated:
+	# hpcc-1.5.0/hpccoutf.txt		# Output File
 ```
-
-* An output file `hpcc-1.5.0/hpccoutf.txt`  will be generated.
