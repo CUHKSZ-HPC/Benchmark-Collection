@@ -32,10 +32,15 @@ cp Make.UNKNOWN ../Make.linux
 ### 3. Modify `Make.linux` according to the text below
 
     ARCH         = linux
-    TOPdir       = $(HOME)/Desktop/test/hpl-2.3             # The root directory of hpl
-    MPinc        = /usr/include/mpich/                      # dpkg --listfiles libmpich-dev | grep 'mpi\.h'
-    MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so    # dpkg --listfiles libmpich-dev | grep 'libmpich.so'
-    LAinc        = /usr/include/x86_64-linux-gnu/atlas      # dpkg --listfiles libatlas-base-dev | grep 'atlas_buildinfo\.h'
+    TOPdir       = ../../..
+    
+    MPdir        = 
+    MPinc        = -I /usr/include/mpich/
+    MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so
+    
+    LAdir        = /usr/lib/x86_64-linux-gnu/atlas
+    LAinc        = -I /usr/include/x86_64-linux-gnu/ 
+    LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
 
 ### 4. Compile HPL
 ```bash
@@ -55,3 +60,45 @@ make arch=linux -j $(nproc)
 mpiexec -n 4 ./xhpl
 # The result is output to stdout
 ```
+
+
+
+#### 6.1* Optimization: Multiple Choices of MPI and BLAS
+
+```bash
+# All
+ARCH         = linux
+TOPdir       = ../../..    # Because all the compilation location are three level higher
+
+# Check Dynamic Linking Status: `ldd bin/linux/xhpl`
+
+# MPI: mpich (apt install libmpich-dev)
+MPdir        = 
+MPinc        = -I /usr/include/mpich/
+MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so
+	# libmpich.so.0 => /usr/lib/x86_64-linux-gnu/libmpich.so.0
+# MPI: openmpi (apt install libopenmpi-dev)
+MPdir        = /usr/lib/x86_64-linux-gnu/openmpi
+MPinc        = -I $(MPdir)/include
+MPlib        = $(MPdir)/lib/libmpi.so
+	# libmpi.so.20 => /usr/lib/x86_64-linux-gnu/libmpi.so.20
+	#              => /usr/lib/x86_64-linux-gnu/libmpi.so.20.10.1
+	#              => /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so.20.10.1
+	
+# BLAS: atlas (apt install libatlas-base-dev)
+LAdir        = /usr/lib/x86_64-linux-gnu/atlas
+LAinc        = -I /usr/include/x86_64-linux-gnu/ 
+LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
+	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3
+# BLAS: blas (*blas-netlib) (apt install libblas-dev)
+LAdir        = /usr/lib/x86_64-linux-gnu/blas
+LAinc        = -I /usr/include/x86_64-linux-gnu/ 
+LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
+	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/blas/libblas.so.3
+# BLAS: openblas (apt install libopenblas-dev)
+LAdir        = /usr/lib/x86_64-linux-gnu/openblas
+LAinc        = -I /usr/include/x86_64-linux-gnu/ 
+LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
+	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
+```
+

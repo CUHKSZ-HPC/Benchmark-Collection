@@ -31,9 +31,15 @@ cp Make.UNKNOWN ../Make.linux
 ### 3. Modify `Make.linux` according to the text below
 
     ARCH         = linux
-    MPinc        = /usr/include/mpich/                      # dpkg --listfiles libmpich-dev | grep 'mpi\.h'
-    MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so    # dpkg --listfiles libmpich-dev | grep 'libmpich.so'
-    LAinc        = /usr/include/x86_64-linux-gnu/atlas      # dpkg --listfiles libatlas-base-dev | grep 'atlas_buildinfo\.h'
+    TOPdir       = ../../..
+    
+    MPdir        = 
+    MPinc        = -I /usr/include/mpich/
+    MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so
+    
+    LAdir        = /usr/lib/x86_64-linux-gnu/atlas
+    LAinc        = -I /usr/include/x86_64-linux-gnu/
+    LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
 
 ### 4. Compile HPCC
 
