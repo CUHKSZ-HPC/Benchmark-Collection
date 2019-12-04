@@ -15,6 +15,7 @@
     sudo apt-get install -y libatlas-base-dev libmpich-dev
 
 ### 1. Download HPL
+
     cd ~
     wget https://www.netlib.org/benchmark/hpl/hpl-2.3.tar.gz
     # unzip the .tar.gz file
@@ -63,7 +64,7 @@ mpiexec -n 4 ./xhpl
 
 
 
-#### 6.1* Optimization: Multiple Choices of MPI and BLAS
+### 6.1* Optimization: Multiple Choices of MPI and BLAS
 
 ```bash
 # All
@@ -101,4 +102,49 @@ LAinc        = -I /usr/include/x86_64-linux-gnu/
 LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
 	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
 ```
+
+
+
+### 6.2* Optimization: HPL Tuning
+
+* `Ns`
+
+    * In order to find out the best performance of your system, the largest problem size fitting in memory is what you should aim for.
+    * `Ns² * DOUBLE_SIZE = Memory_SIZE_B`
+    * `TARGET_Ns = sqrt( Memory_Size_PER_Node_GB * NUM_Node * 0.8 * 1024³ / 8 ) `
+
+* `NBs`
+
+    * HPL uses the block size NB for the data distribution as well as for the computational granularity.
+    * From a data distribution point of view, the smallest NB, the better the load balance. 
+    * From a computation point of view, a too small value of NB may limit the computational performance by a large factor because almost no data reuse will occur in the highest level of the memory hierarchy. The number of messages will also increase.
+    * Efficient matrix-multiply routines are often internally blocked. Small multiples of this blocking factor are likely to be good block sizes for HPL.
+    * The bottom line is that "good" block sizes are almost always in the `32:256:8` interval. The best values depend on the computation / communication performance ratio of your system.
+
+* `Ps, Qs`
+* `P×Q = NUM_CORES`
+    
+* This depends on the physical interconnection network you have. 
+    
+    * Assuming a mesh or a switch HPL, P and Q should be approximately equal, with Q slightly larger than P: `2×2`
+    
+    * If you are running on a simple Ethernet network, there is only one wire through which all the messages are exchanged. On such a network, the performance and scalability of HPL is strongly limited and very flat process grids are likely to be the best choice: `1×4`
+
+### 7. Miscellaneous
+
+* `Time` output
+
+    * `TOTAL_TIME = Time + residual_check_time`
+    * `residual_check_time ≈ Time × 0.12`
+
+* `Rpeak`
+
+    * It’s basically the theoretical calculated performance of your system.
+
+    * `Rpeak_Gflops = CPU_FREQ_GHz × NUM_CORES × flops_PC`
+
+        * `flops_PC = flops_IPC × VECTOR_SIZE`
+        * `flops_IPC = 1/flops_CPI`
+        * `C = Cycle  ;  P = Per  ;  I = Instruction`
+
 
