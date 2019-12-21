@@ -125,3 +125,39 @@ AvgPingPongBandwidth_GBytes=13.5313
 NaturallyOrderedRingLatency_usec=0.373522
 ```
 
+
+
+#### 7* Makefile Arch
+
+```makefile
+# hpcc-1.5.0/Makefile
+#    Call makefile in hpcc/hpl/lib/arch/build.
+include hpl/Make.$(arch)
+
+all:
+	- $(MKDIR) hpl/lib/$(arch)
+	( $(CD) hpl/lib/arch/build ; $(MAKE) arch=$(arch) -f Makefile.hpcc )
+
+# hpcc-1.5.0/hpl/lib/arch/build
+#    Read config file in hpcc/hpl/Make.$(arch), build all .o files and `hpcc`.
+include ../../../Make.$(arch)
+
+../../../../hpcc : $(HPLlib)
+	$(LINKER) $(LINKFLAGS) -o ../../../../hpcc $(HPL_LIBS)
+	
+../../../src/auxil/HPL_dlacpy.o : ../../../src/auxil/HPL_dlacpy.c $(HDEP1)
+	$(CC) -o ../../../src/auxil/HPL_dlacpy.o -c ../../../src/auxil/HPL_dlacpy.c $(CCFLAGS)
+	
+## hpcc-1.5.0/hpl/Make.linux
+#    Config MPI and BLAS 's lib and inc.
+MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so
+LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
+HPL_LIBS     = $(HPLlib) $(LAlib) $(MPlib) -lm
+
+MPinc        = -I /usr/include/mpich/
+LAinc        = -I /usr/include/x86_64-linux-gnu/
+HPL_INCLUDES = -I$(INCdir) -I$(INCdir)/$(ARCH) $(LAinc) $(MPinc)
+HPL_DEFS     = $(F2CDEFS) $(HPL_OPTS) $(HPL_INCLUDES) 
+CCFLAGS      = $(HPL_DEFS) 
+```
+

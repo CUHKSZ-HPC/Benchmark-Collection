@@ -86,6 +86,7 @@ MPlib        = $(MPdir)/lib/libmpi.so
 	#              => /usr/lib/x86_64-linux-gnu/libmpi.so.20.10.1
 	#              => /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so.20.10.1
 	
+# Notice: The `cblas.h` in @LAinc is infact a symlink to `/etc/alternatives/cblas.h-x86_64-linux-gnu`, which symlink back to `cblas-atlas.h` or others. Make sure you use `update-alternatives --config libblas.so-x86_64-linux-gnu` to choose the correct `cblas.h`.
 # BLAS: atlas (apt install libatlas-base-dev)
 LAdir        = /usr/lib/x86_64-linux-gnu/atlas
 LAinc        = -I /usr/include/x86_64-linux-gnu/ 
@@ -123,9 +124,9 @@ LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
 
 * `Ps, Qs`
 * `P×Q = NUM_CORES`
-    
+  
 * This depends on the physical interconnection network you have. 
-    
+  
     * Assuming a mesh or a switch HPL, P and Q should be approximately equal, with Q slightly larger than P: `2×2`
     
     * If you are running on a simple Ethernet network, there is only one wire through which all the messages are exchanged. On such a network, the performance and scalability of HPL is strongly limited and very flat process grids are likely to be the best choice: `1×4`
