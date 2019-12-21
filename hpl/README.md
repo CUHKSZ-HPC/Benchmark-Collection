@@ -86,22 +86,22 @@ MPlib        = $(MPdir)/lib/libmpi.so
 	#              => /usr/lib/x86_64-linux-gnu/libmpi.so.20.10.1
 	#              => /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so.20.10.1
 	
-# Notice: The `cblas.h` in @LAinc is infact a symlink to `/etc/alternatives/cblas.h-x86_64-linux-gnu`, which symlink back to `cblas-atlas.h` or others. Make sure you use `update-alternatives --config libblas.so-x86_64-linux-gnu` to choose the correct `cblas.h`.
 # BLAS: atlas (apt install libatlas-base-dev)
 LAdir        = /usr/lib/x86_64-linux-gnu/atlas
-LAinc        = -I /usr/include/x86_64-linux-gnu/ 
+LAinc        = 
 LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
 	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3
 # BLAS: blas (*blas-netlib) (apt install libblas-dev)
 LAdir        = /usr/lib/x86_64-linux-gnu/blas
-LAinc        = -I /usr/include/x86_64-linux-gnu/ 
+LAinc        = 
 LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
 	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/blas/libblas.so.3
 # BLAS: openblas (apt install libopenblas-dev)
 LAdir        = /usr/lib/x86_64-linux-gnu/openblas
-LAinc        = -I /usr/include/x86_64-linux-gnu/ 
+LAinc        = 
 LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
 	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
+# @LAinc should be blank, since HPL use its own `hpl_blas.h`.
 ```
 
 
