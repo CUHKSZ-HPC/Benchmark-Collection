@@ -63,5 +63,5 @@ mpirun -np 4 ./xhpcg
 	# hpcg-3.1/build/bin/HPCG-Benchmark_3.1_2019-12-02_13-20-15.txt
 ```
 ## Reference Websites for HPCG Configurations
-https://www.cnblogs.com/zhyantao/p/10614243.html
-https://www.cnblogs.com/zhyantao/p/10614237.html
+*HPCG tests: https://www.cnblogs.com/zhyantao/p/10614243.html
+*MPICH2 Configuration: https://www.cnblogs.com/zhyantao/p/10614237.html
