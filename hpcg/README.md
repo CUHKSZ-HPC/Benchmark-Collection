@@ -44,6 +44,7 @@ make -j $(nproc)
 	# hpcg-3.1/build/bin/xhpcg			# Executable File
 ```
 
+
 ### 5. Modify `hpcg.dat` and run the HPCG
 
 ##### Modify `hpcg.dat` based on the text below (the original problem size is too large for 2GB memory):
@@ -61,3 +62,6 @@ mpirun -np 4 ./xhpcg
 	# hpcg-3.1/build/bin/hpcg20191202T131917.txt
 	# hpcg-3.1/build/bin/HPCG-Benchmark_3.1_2019-12-02_13-20-15.txt
 ```
+## Reference Websites for HPCG Configurations
+https://www.cnblogs.com/zhyantao/p/10614243.html
+https://www.cnblogs.com/zhyantao/p/10614237.html
