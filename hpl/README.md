@@ -103,7 +103,7 @@ LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
 	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
 # @LAinc should be blank, since HPL use its own `hpl_blas.h`.
 ```
-
+* For BLAS options as *Intel KML*, *AMD BLAS* and more, see [vitowu: 用 GCC 在单节点上 Build HPL-CPU](http://vitowu.cn/index.php/archives/1326/)
 
 
 ### 6.2* Optimization: HPL Tuning
