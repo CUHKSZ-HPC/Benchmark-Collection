@@ -19,17 +19,6 @@ TOPdir       = ../../..    # Because all the compilation location are three leve
 
 *Check dynamic link status by `ldd bin/linux/xhpl`*.
 
-* `MPICH`
-
-    ```bash
-    MPdir        = 
-    MPinc        = -I /usr/include/mpich/
-    MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so
-    ```
-
-    * Installation: `apt install libmpich-dev`
-    * Check: `libmpich.so.0 => /usr/lib/x86_64-linux-gnu/libmpich.so.0`
-
 * `OpenMPI`
 
     ```bash
@@ -48,6 +37,17 @@ TOPdir       = ../../..    # Because all the compilation location are three leve
                      => /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so.20.10.1
         ```
     
+* `MPICH`
+
+    ```bash
+    MPdir        = 
+    MPinc        = -I /usr/include/mpich/
+    MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so
+    ```
+
+    * Installation: `apt install libmpich-dev`
+    * Check: `libmpich.so.0 => /usr/lib/x86_64-linux-gnu/libmpich.so.0`
+
 * `Intel MPI`
 
     ```bash
@@ -126,8 +126,6 @@ TOPdir       = ../../..    # Because all the compilation location are three leve
     *`mpicc` is a wrapper of `gcc`*
 
 ```bash
-HPL_OPTS     = -DHPL_DETAILED_TIMING -DHPL_PROGRESS_REPORT -DHPL_CALL_CBLAS
-
 CC           = mpicc.mpich   # or mpicc.openmpi
 CCNOOPT      = $(HPL_DEFS) 
 CCFLAGS      = $(HPL_DEFS) -fomit-frame-pointer -O3 -funroll-loops -W -Wall
@@ -138,13 +136,11 @@ LINKFLAGS    =
 
 
 
-*  `Intel MPI` 
+*  `Intel MPI`  or  `Intel KML`
 
     *`mpiicc` is a wrapper of `icc (Intel C++ Compiler)`*
 
 ```bash
-HPL_OPTS     = -DHPL_DETAILED_TIMING -DHPL_PROGRESS_REPORT -DHPL_CALL_CBLAS
-
 CC       = mpiicc
 CCNOOPT  = $(HPL_DEFS)
 OMP_DEFS = -qopenmp
@@ -155,4 +151,10 @@ LINKFLAGS    = $(CCFLAGS) $(OMP_DEFS) -mt_mpi
 ```
 
 
+
+## Others
+
+```bash
+HPL_OPTS     = -DHPL_DETAILED_TIMING -DHPL_PROGRESS_REPORT -DHPL_CALL_CBLAS
+```
 

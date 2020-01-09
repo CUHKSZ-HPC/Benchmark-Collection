@@ -20,7 +20,7 @@ nvidia-smi -L
 
 
 
-#### Download HPCG-3.1_CUDA-10
+#### 1. Download HPCG-3.1_CUDA-10
 
 [hpcg: HPCG Software Releases](https://www.hpcg-benchmark.org/software/index.html)
 
@@ -33,7 +33,7 @@ tar zxvf hpcg-3.1_cuda-10_ompi-3.1_gcc485_sm_35_sm_50_sm_60_sm_70_sm75_ver_10_9_
 
 
 
-#### Install CUDA-10.0.130
+#### 2. Install CUDA-10.0.130
 
 [NVIDIA: CUDA Toolkit 10.0 Archive](https://developer.nvidia.com/cuda-10.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)
 
@@ -57,7 +57,7 @@ sudo apt-get install cuda-libraries-10-0
 
 
 
-#### Install OpenMPI-3.1.0
+#### 3. Install OpenMPI-3.1.0
 
 [open-mpi: Open MPI: Version 3.1](https://www.open-mpi.org/software/ompi/v3.1/)
 
@@ -79,7 +79,7 @@ mpirun --version
 
 
 
-#### Config HPCG-3.1_CUDA-10
+#### 4. Config HPCG-3.1_CUDA-10
 
 * `cd hpcg-3.1_cuda-10_ompi-3.1_gcc485_sm_35_sm_50_sm_60_sm_70_sm75_ver_10_9_18`
 
@@ -108,4 +108,12 @@ mpirun --version
 
     * use `watch -d -n1 nvidia-smi` to see the usage of GPU
     * use `watch -d -n1 nvidia-smi -i 0` to see the usage of single GPU
+
+
+
+#### Output Explain
+
+* total =  810.5 GF (6146.1 GB/s Effective)  101.3 GF_per ( 768.3 GB/s Effective)
+    * `810.5 GF` is the speed of all GPUs combined.
+    * `101.3 GF_per` is the speed of single GPU.
 

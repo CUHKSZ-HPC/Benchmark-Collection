@@ -126,20 +126,27 @@ mpiexec -n 4 ./xhpl
 
 [calculation of Rpeak2](https://proteusmaster.urcf.drexel.edu/urcfwiki/index.php?title=Compiling_High_Performance_Linpack_(HPL)&mobileaction=toggle_view_desktop)
 
-* `XPS`
+* `XPS 15-9560`
 
     * `CPU_FREQ_GHz = 2.5 GHz`
+    
     * `NUM_CORES = 4`
+    
     * `arch = Kaby Lake`
-        * `flops_IPC = 2`
-        * `VECTOR_SIZE = 4 / 8?`
-        * `flops_PC = 8 / 16?`
+        * `flops_IPC = 2`  `VECTOR_SIZE = 8?`
+    * `flops_PC = 16?`
+    
+* `Rpeak = 40 GFlops/core?` 
+  
+* `Rpeak = 160 GFlops?`
+  
+* **Result**
+  
+    * `Intel MPI` + `Intel MKL` + `nice` + `taskset`
+    
+    * `Rmax = 37 Gflops/core` (`N=24000`)
+    
+    * `Rmax = 118 Gflops` (`N=24000, NB=64, P=2, Q=4, nice -n -20, -np 8`)
+    
+      ​      
 
-    * `Rpeak = 80 / 160 GFlops?`
-        * `Rpeak = 20 / 40 GFlops/core?`
-    * **Result**
-        * `mpich` + `openblas` + `taskset`
-        * `Rmax = 34 Gflops/core`
-            * `WR00L2L2       10000   256     1     1              19.57             3.4074e+01`
-        * `Rmax = 56 Gflops`
-            * `WR00L2L2       10000   256     1     4              11.95             5.5802e+01`
