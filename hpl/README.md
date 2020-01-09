@@ -46,11 +46,16 @@ cp Make.UNKNOWN ../Make.linux
 ### 4. Compile HPL
 ```bash
 # Working Dir: hpl-2.3/
-make arch=linux -j $(nproc)
+make arch=linux
 # These Files will be Generated:
 	# hpl-2.3/bin/linux/HPL.dat		# Benchmark Configuration File
 	# hpl-2.3/bin/linux/xhpl		# Executable File
 ```
+
+* **Notice: Do not use ` -j $(nproc)` ! Apparently HPL is not smart enough to write a thread-safe Makefile.**
+* To rebuild HPL: `make arch=linux clean_arch_all ; make arch=linux`
+
+
 
 ### 5. Run the HPL
 
@@ -66,44 +71,11 @@ mpiexec -n 4 ./xhpl
 
 ### 6.1* Optimization: Multiple Choices of MPI and BLAS
 
-```bash
-# All
-ARCH         = linux
-TOPdir       = ../../..    # Because all the compilation location are three level higher
+* See `AP-Collection/hpl/Intel-MPI-KML-Installation-guide.md`
 
-# Check Dynamic Linking Status: `ldd bin/linux/xhpl`
+* Also see [vitowu: 用 GCC 在单节点上 Build HPL-CPU](http://vitowu.cn/index.php/archives/1326/)
 
-# MPI: mpich (apt install libmpich-dev)
-MPdir        = 
-MPinc        = -I /usr/include/mpich/
-MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so
-	# libmpich.so.0 => /usr/lib/x86_64-linux-gnu/libmpich.so.0
-# MPI: openmpi (apt install libopenmpi-dev)
-MPdir        = /usr/lib/x86_64-linux-gnu/openmpi
-MPinc        = -I $(MPdir)/include
-MPlib        = $(MPdir)/lib/libmpi.so
-	# libmpi.so.20 => /usr/lib/x86_64-linux-gnu/libmpi.so.20
-	#              => /usr/lib/x86_64-linux-gnu/libmpi.so.20.10.1
-	#              => /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so.20.10.1
-	
-# BLAS: atlas (apt install libatlas-base-dev)
-LAdir        = /usr/lib/x86_64-linux-gnu/atlas
-LAinc        = 
-LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
-	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3
-# BLAS: blas (*blas-netlib) (apt install libblas-dev)
-LAdir        = /usr/lib/x86_64-linux-gnu/blas
-LAinc        = 
-LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
-	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/blas/libblas.so.3
-# BLAS: openblas (apt install libopenblas-dev)
-LAdir        = /usr/lib/x86_64-linux-gnu/openblas
-LAinc        = 
-LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
-	# libblas.so.3 => /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
-# @LAinc should be blank, since HPL use its own `hpl_blas.h`.
-```
-* For BLAS options as *Intel KML*, *AMD BLAS* and more, see [vitowu: 用 GCC 在单节点上 Build HPL-CPU](http://vitowu.cn/index.php/archives/1326/)
+
 
 
 ### 6.2* Optimization: HPL Tuning
@@ -148,4 +120,26 @@ LAlib        = -Wl,-rpath=$(LAdir)/ $(LAdir)/libblas.so
         * `flops_IPC = 1/flops_CPI`
         * `C = Cycle  ;  P = Per  ;  I = Instruction`
 
+[double precision](https://www.netlib.org/benchmark/hpl/)
 
+[calculation of Rpeak](https://stackoverflow.com/questions/44606021/how-to-calculate-hpc-performance-rpeak)
+
+[calculation of Rpeak2](https://proteusmaster.urcf.drexel.edu/urcfwiki/index.php?title=Compiling_High_Performance_Linpack_(HPL)&mobileaction=toggle_view_desktop)
+
+* `XPS`
+
+    * `CPU_FREQ_GHz = 2.5 GHz`
+    * `NUM_CORES = 4`
+    * `arch = Kaby Lake`
+        * `flops_IPC = 2`
+        * `VECTOR_SIZE = 4 / 8?`
+        * `flops_PC = 8 / 16?`
+
+    * `Rpeak = 80 / 160 GFlops?`
+        * `Rpeak = 20 / 40 GFlops/core?`
+    * **Result**
+        * `mpich` + `openblas` + `taskset`
+        * `Rmax = 34 Gflops/core`
+            * `WR00L2L2       10000   256     1     1              19.57             3.4074e+01`
+        * `Rmax = 56 Gflops`
+            * `WR00L2L2       10000   256     1     4              11.95             5.5802e+01`
