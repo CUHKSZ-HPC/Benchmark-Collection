@@ -114,10 +114,34 @@ TOPdir       = ../../..    # Because all the compilation location are three leve
     ```
 
     * Installation: `see Intel-MPI-KML-Installation-guide.md`
+* Check: `Static linked here`
+    
 
-    * Check: `Static linked here`
 
-        
+#### Performance Analysis
+
+```bash
+objdump -d -C /usr/lib/x86_64-linux-gnu/blas/libblas.a | grep %ymm | wc -l
+objdump -d -C /usr/lib/x86_64-linux-gnu/atlas/libblas.a | grep %ymm | wc -l
+objdump -d -C /usr/lib/x86_64-linux-gnu/openblas/libblas.a | grep %ymm | wc -l
+objdump -d -C /opt/intel/mkl/lib/intel64/libmkl_core.a | grep %ymm | wc -l
+
+netlib-blas, atlas - no  ymm, no zmm
+openblas           - yes ymm, no zmm
+mkl                - yes ymm, yes zmm
+
+# HPL program have nothing to do with ymm or zmm. It's blas which use ymm or zmm.
+# netlib-blas, atlas do not support avx
+# openblas supports avx/avx2
+# mkl supposts avx-512
+
+# Float Point Register:
+# xmm - 128 bit - 16# - Normal FP Operation, SSE Family
+# ymm - 256 bit - 16# - AVX, AVX2
+# zmm - 512 bit - 32# - AVX512
+```
+
+  
 
 ## Part Four - Compilation Flags
 

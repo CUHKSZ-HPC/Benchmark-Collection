@@ -110,43 +110,67 @@ mpiexec -n 4 ./xhpl
     * `TOTAL_TIME = Time + residual_check_time`
     * `residual_check_time ≈ Time × 0.12`
 
-* `Rpeak`
 
-    * It’s basically the theoretical calculated performance of your system.
 
-    * `Rpeak_Gflops = CPU_FREQ_GHz × NUM_CORES × flops_PC`
+## 7.2 Rpeak
 
-        * `flops_PC = flops_IPC × VECTOR_SIZE`
-        * `flops_IPC = 1/flops_CPI`
-        * `C = Cycle  ;  P = Per  ;  I = Instruction`
+[stack ov: how to calculate hpc performance rpeak [closed]](https://stackoverflow.com/questions/44606021/how-to-calculate-hpc-performance-rpeak)
 
-[double precision](https://www.netlib.org/benchmark/hpl/)
+[drexel: Compiling High Performance Linpack (HPL)](https://proteusmaster.urcf.drexel.edu/urcfwiki/index.php?title=Compiling_High_Performance_Linpack_(HPL)&mobileaction=toggle_view_desktop)
 
-[calculation of Rpeak](https://stackoverflow.com/questions/44606021/how-to-calculate-hpc-performance-rpeak)
+[stack ov: How can CPU's have FLOPS much higher than their clock speeds?](https://stackoverflow.com/questions/51219820/how-can-cpus-have-flops-much-higher-than-their-clock-speeds)
 
-[calculation of Rpeak2](https://proteusmaster.urcf.drexel.edu/urcfwiki/index.php?title=Compiling_High_Performance_Linpack_(HPL)&mobileaction=toggle_view_desktop)
+It’s  the theoretical calculated performance of your system.
 
-* `XPS 15-9560`
+HPL solves dense linear system in double precision, so the result it gives is `Gflops in double` (not sure).
 
-    * `CPU_FREQ_GHz = 2.5 GHz`
+#### How to calculate Rpeak
+
+* `Rpeak = CPU_freq × num_cores × flops/cycle`
+    * Unit: `Rpeak (Gflops in doube), CPU_freq (GHz)`
+* `Efficiency = Rmax / Rpeak`
+    * Explain: `Rmax = Measured Performance, Rpeak = Theoretic Performance`
+
+#### factor - CPU_freq
+
+`CPU_freq` should be the actual CPU frequency achieved when running HPL, not the theoretic base frequency. (Not sure)
+
+* For example, `Intel(R) Xeon(R) Silver 4210 CPU @ 2.20GHz, 10 core`. Although its base frequency is `2.2 GHz`, it only achieve `1.5 GHz` when running 8 core on HPL. So, its `CPU_freq_GHz=1.5GHz` when `num_cores=10`.
+
+> Please keep in mind that the recent processors from AMD and Intel utilize frequency scaling. The nominal frequency from the specification might be lower than the maximum frequency, that the processor might be able to use under some circumstances. (https://icl.utk.edu/hpcc/faq/index.html)
+
+> For the theoretical peak, the maximum frequency should be used.
+
+#### factor - flops/cycle
+
+`flops/cycle = fp_instruction/cycle × flops/flops_instruction × vector_size`
+
+* Modern CPU with `FMA` support `16 flops/cycle (double)`
+
+    * `fp_instruction/cycle = 2`
+
+        * > Haswell/Broadwell/Skylake, still 2 floating point operations per cycle.
+
+    * `flops/flops_instruction = 2`
     
-    * `NUM_CORES = 4`
+        * > A modern CPU such as 8700k can start executing *two* (independent) FMAs in the same cycle.
     
-    * `arch = Kaby Lake`
-        * `flops_IPC = 2`  `VECTOR_SIZE = 8?`
-    * `flops_PC = 16?`
+        * The FMA operation has the form *d* = round(*a* · *b* + *c*), so two flops point operation in one instruction.
     
-* `Rpeak = 40 GFlops/core?` 
+    * `vector_size = 256/64 = 4 (double)`
+    
+        * `FMA` use 256-bit registers, double is 64 bit
+    
+        
+
+#### Example - Xeon(R) Silver 4210
+
+* `Intel(R) Xeon(R) Silver 4210 CPU @ 2.20GHz, 10 core, Cascade Lake`
+
+    ```bash
+  cpu_freq = 2.0 GHz, num_cores = 1, flops/cycle = 16,
+  Rpeak = 32 Gflops
   
-* `Rpeak = 160 GFlops?`
-  
-* **Result**
-  
-    * `Intel MPI` + `Intel MKL` + `nice` + `taskset`
-    
-    * `Rmax = 37 Gflops/core` (`N=24000`)
-    
-    * `Rmax = 118 Gflops` (`N=24000, NB=64, P=2, Q=4, nice -n -20, -np 8`)
-    
-      ​      
-
+  cpu_freq = 1.5 GHz, num_cores = 10, flops/cycle = 16,
+  Rpeak = 480 Gflops
+  ```
