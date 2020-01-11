@@ -1,6 +1,6 @@
 ## Install `Intel MPI` and `Intel MKL (blas)`
 
-**Environment: `Ubuntu 18.04 LTS**
+**Environment: `Ubuntu 18.04 LTS`**
 
 You should Install [Intel® Parallel Studio XE for Linux*](https://software.intel.com/en-us/parallel-studio-xe/choose-download/student-linux-fortran), which Included `Intel® C++ Compiler`  `Intel® Math Kernel Library`  `Intel® MPI Library`.
 

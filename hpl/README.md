@@ -100,8 +100,9 @@ mpiexec -n 4 ./xhpl
 * This depends on the physical interconnection network you have. 
   
     * Assuming a mesh or a switch HPL, P and Q should be approximately equal, with Q slightly larger than P: `2×2`
-    
     * If you are running on a simple Ethernet network, there is only one wire through which all the messages are exchanged. On such a network, the performance and scalability of HPL is strongly limited and very flat process grids are likely to be the best choice: `1×4`
+    
+    
 
 ### 7. Miscellaneous
 
@@ -120,57 +121,206 @@ mpiexec -n 4 ./xhpl
 
 [stack ov: How can CPU's have FLOPS much higher than their clock speeds?](https://stackoverflow.com/questions/51219820/how-can-cpus-have-flops-much-higher-than-their-clock-speeds)
 
+[hlhpc: HPL Tutorials](https://ulhpc-tutorials.readthedocs.io/en/latest/parallel/mpi/HPL/)
+
+[agner: microarchitecture\11.9  #***](https://www.agner.org/optimize/microarchitecture.pdf)
+
 It’s  the theoretical calculated performance of your system.
 
-HPL solves dense linear system in double precision, so the result it gives is `Gflops in double` (not sure).
+HPL solves dense linear system in double precision, so the result it gives is `Double Precision Gflops`. **We all use `Double Precision` in calculating float point computation performance**
 
-#### How to calculate Rpeak
+#### 7.2.1 How to calculate Rpeak
 
-* `Rpeak = CPU_freq × num_cores × flops/cycle`
-    * Unit: `Rpeak (Gflops in doube), CPU_freq (GHz)`
-* `Efficiency = Rmax / Rpeak`
-    * Explain: `Rmax = Measured Performance, Rpeak = Theoretic Performance`
+$$
+Rpeak=cores×\frac{cycles}{second}×\frac{flops}{cycle}\\
+=cores×freq×\frac{flops}{cycle}\\
+Unit: Rpeak (Gflops/s), freq(GHz)
+$$
 
-#### factor - CPU_freq
 
-`CPU_freq` should be the actual CPU frequency achieved when running HPL, not the theoretic base frequency. (Not sure)
+$$
+Efficiency = \frac{Rmax}{Rpeak}\\
+Rmax=Measured, Rpeak=Theoretic
+$$
 
-* For example, `Intel(R) Xeon(R) Silver 4210 CPU @ 2.20GHz, 10 core`. Although its base frequency is `2.2 GHz`, it only achieve `1.5 GHz` when running 8 core on HPL. So, its `CPU_freq_GHz=1.5GHz` when `num_cores=10`.
+#### 7.2.2 factor - $freq$
 
-> Please keep in mind that the recent processors from AMD and Intel utilize frequency scaling. The nominal frequency from the specification might be lower than the maximum frequency, that the processor might be able to use under some circumstances. (https://icl.utk.edu/hpcc/faq/index.html)
+$freq$ should be the AVX-512 Turbo Frequency, not the base frequency. Since AVX lower CPU frequency.
 
-> For the theoretical peak, the maximum frequency should be used.
+* [SIMD instructions lowering CPU frequency](https://stackoverflow.com/questions/56852812/simd-instructions-lowering-cpu-frequency)
 
-#### factor - flops/cycle
+* Example: Xeon Silver 4210
 
-`flops/cycle = fp_instruction/cycle × flops/flops_instruction × vector_size`
+    The Base frequency is `2.2 GHz`, Turbo to `3.2 GHz`. But the *All-Core AVX-512 Turbo Frequency* is `1.5 GHz`, use that as the `CPU_freq`.
 
-* Modern CPU with `FMA` support `16 flops/cycle (double)`
-
-    * `fp_instruction/cycle = 2`
-
-        * > Haswell/Broadwell/Skylake, still 2 floating point operations per cycle.
-
-    * `flops/flops_instruction = 2`
+    ![1578715606966](typora-images-assets/1578715606966.png)
     
-        * > A modern CPU such as 8700k can start executing *two* (independent) FMAs in the same cycle.
+* In fact, because of the lowering CPU frequency, often in `1×512-bit FMA Units` case, `AVX2` is much faster than `AVX512`
+
+* [software.intel: AVX512 slower than AVX2 with Intel MKL dgemm on Intel Gold 5118](https://software.intel.com/en-us/forums/software-tuning-performance-optimization-platform-monitoring/topic/815069)
+
+#### 7.2.3 factor - $flops/cycle$
+$$
+\frac{flops}{cycle}=\frac{operations}{instruction}×\frac{flops}{operation}
+$$
+
+​	[wikichip: flops](https://en.wikichip.org/wiki/flops)
+
+* `1×256-bit FMA Units ` carry on **8 $flops/cycle$**
     
-        * The FMA operation has the form *d* = round(*a* · *b* + *c*), so two flops point operation in one instruction.
+    * $\frac{operations}{instruction}=4=vector\_size$
+        * $vector\_size=4=\frac{256-bit\ FMA\ Register}{64-bit\ double\ pricision}$
+    * $\frac{flops}{operation}=2=FMA\ Feature$
+        * The FMA operation has the form *d* = round(*a* · *b* + *c*), so two flops in one operation.
+        * [walkingrandomly: Fused Multiply Add (FMA) – One flop or two?](http://www.walkingrandomly.com/?p=4781)
     
-    * `vector_size = 256/64 = 4 (double)`
+*  `1×512-bit FMA Units` carry on **16 $flops/cycle$**
+
+*  `2×256-bit FMA Units` carry on **2*8 $flops/cycle$**
+
+    Modern CPU have at least 2 256-bit FMA Units and can access them at the same time.
+
+    > Haswell microarchitecture is able to handle two FMA instructions at the same time, (on two dedicated execution ports) with a latency of five cycles and a throughput of  one  instruction  per  clock  cycle  and  per  execution  port  (two  FMA  instructions total  per  cycle). [Pawel Gepner: Paper](http://www.cai.sk/ojs/index.php/cai/article/download/2017_5_1001/851)
+
+*  `1×512-bit FMA Units running AVX2` can still carry on **16 $flops/cycle$**
+
+  > This combined 512-bit unit is accessed through port 0, while port 1 can be used for other purposes simultaneously.
+  >
+  > Floating point vector instructions of 256 bits or less go through port 0 or 1, while 512-bit floating point instructions go through port 0 or 5. [agner: The microarchitecture of Intel CPUs\11.9](https://www.agner.org/optimize/microarchitecture.pdf)
+  
+  
+
+#### 7.2.4 $flops/cycle$ of CPU flaged `AVX2 & FMA`
+
+| flops/cycle | 2×256-bit FMA | 1×512-bit FMA | 2×512-bit FMA |
+| ----------- | ------------- | ------------- | ------------- |
+| SSE4_2      | 4             | 4             | 4             |
+| AVX         | 8             | 8             | 8             |
+| AVX2        | 16            | 16            | 16            |
+| AVX-512     |               | 16            | 32            |
+
+* `Skylake` FMA EU
+
+    | Port | EU                     |
+    | ---- | ---------------------- |
+    | 0    | 256-bit FMA            |
+    | 1    | 256-bit FMA            |
+    | 5    | 512-bit FMA (optional) |
+
+    * 256-bit FMA of port 0 and port 1 can be logically combined to create the single 512-bit FMA unit when `AVX-512` is supported.
+
+    * > The second AVX-512 unit does not execute AVX-256 instructions
+
+        Or, most AVX-256. There is still some instructions achieved 3 instruction/cycle.
+
+* How to know the number of AVX-512 units?
+
+    * [wikichip: intel](https://en.wikichip.org/wiki/intel)
+
     
-        * `FMA` use 256-bit registers, double is 64 bit
-    
-        
 
 #### Example - Xeon(R) Silver 4210
 
 * `Intel(R) Xeon(R) Silver 4210 CPU @ 2.20GHz, 10 core, Cascade Lake`
 
     ```bash
+  MKL_ENABLE_INSTRUCTIONS=AVX512
   cpu_freq = 2.0 GHz, num_cores = 1, flops/cycle = 16,
   Rpeak = 32 Gflops
   
   cpu_freq = 1.5 GHz, num_cores = 10, flops/cycle = 16,
   Rpeak = 480 Gflops
   ```
+
+
+
+
+
+## HPL Source Code Analysis
+
+#### Makefile Arch
+
+```bash
+# hpl-2.3/Makefile
+#    Call makefile in hpl-2.3/Make.top
+all              : install
+install          : startup refresh build
+startup          :
+	$(MAKE) -f Make.top startup_dir     arch=$(arch)
+	# ...
+build            :
+	$(MAKE) -f Make.top build_src       arch=$(arch)
+	$(MAKE) -f Make.top build_tst       arch=$(arch)
+
+# hpl-2.3/Make.top
+#    Read config file in hpl/Make.$(arch), Call makefile in src/*/$(arch) and testing/*/$(arch)
+include Make.$(arch)
+build_src        :
+	( $(CD) src/auxil/$(arch);         $(MAKE) )
+	# ...
+build_tst        :
+	( $(CD) testing/matgen/$(arch);    $(MAKE) )
+	# ...
+#	 makefile is originally in src/*/Makefile.in, not sure what is `Makefile.in`
+	
+# hpl-2.3/testing/ptest/linux/Makefile
+xhpl             = $(BINdir)/xhpl
+HPL_pteobj       = \
+   HPL_pddriver.o         HPL_pdinfo.o           HPL_pdtest.o
+dexe.grd: $(HPL_pteobj) $(HPLlib)
+	$(LINKER) $(LINKFLAGS) -o $(xhpl) $(HPL_pteobj) $(HPL_LIBS)
+	$(MAKE) $(BINdir)/HPL.dat
+	$(TOUCH) dexe.grd
+#	hpl-2.3/testing/ptest/HPL_pddriver.c is where `main()` start
+```
+
+#### file call stack
+
+```bash
+hpl-2.3/testing/ptest/HPL_pddriver.c # main, read config, prepare env, call next
+↓
+hpl-2.3/testing/ptest/HPL_pdtest.c # allocate memory, generate matrix, call next, print result, check computation
+↓
+hpl-2.3/src/pgesv/HPL_pdgesv.c # `factors a N+1-by-N matrix using LU factorization with row partial pivoting`, call next
+↓
+hpl-2.3/src/pgesv/HPL_pdtrsv.c # core, `solves the upper triangular system of linear equations`, call cblas functions
+```
+
+#### How does HPL calculation Gflops?
+
+```bash
+# In hpl-2.3/testing/ptest/HPL_pdtest.c:
+Gflops = ( ( (double)(N) /   1.0e+9 ) * 
+    ( (double)(N) / wtime[0] ) ) * 
+    ( ( 2.0 / 3.0 ) * (double)(N) + ( 3.0 / 2.0 ) );
+```
+
+#### BLAS function
+
+[netlib: BLAS](http://www.netlib.org/blas/)
+
+According to `hpl-2.3/include/hpl_blas.h`, these are the BLAS functions that HPL used.
+
+```bash
+# Level 1
+cblas_idamax - index of max abs value
+cblas_dswap - swap x and y
+cblas_dcopy - copy x into y
+cblas_daxpy - y = a*x + y
+cblas_dscal - x = a*x
+# Level 2
+cblas_dgemv - matrix vector multiply
+cblas_dger - performs the rank 1 operation A := alpha*x*y' + A
+cblas_dtrsv - solving triangular matrix problems
+# Level 3
+cblas_dgemm - matrix matrix multiply
+cblas_dtrsm - solving triangular matrix with multiple right hand sides
+
+# `d = double`
+
+BLAS Level
+Level 1 - scalar, vector, vector-vector operation
+Level 2 - matrix-vector operation
+Level 3 - matrix-matrix operation
+```
+
