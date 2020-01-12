@@ -6,6 +6,8 @@ Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz,
 AVX2, FMA=2
 ```
 
+![1578755569852](typora-images-assets/1578755569852.png)
+
 
 
 ## Single Core Test
@@ -64,11 +66,9 @@ I use `nice` and `taskset`, in order to avoid context switch, so can achieve hig
 Further solution include: 
 
 1. Interrupt mask to prevent interrupts on certain CPU: [How to give a single process its own CPU core in linux](http://www.hydrogen18.com/blog/howto-give-a-single-process-its-own-cpu-core-in-linux.html)
-
+* check cpuset : `lstopo --no-io --no-caches -c`
 2. Kernel boot (GRUB) parameter to avoid kernel using certain CPU
-
 3. Close Hyper-Thread
-
 4. Cgroup to isolate CPUs
 
 

@@ -6,12 +6,14 @@ Intel(R) Xeon(R) Silver 4210 CPU @ 2.20GHz × 2,
 AVX-512, FMA=1, SMP=2, UPI=2
 ```
 
-|        | 1 core turbo freq | 20 core turbo freq |
+|        | 1 core turbo freq | 10 core turbo freq |
 | ------ | ----------------- | ------------------ |
 | SSE4_2 | 3.2               | 2.7                |
 | AVX    | 3                 | 2.3                |
 | AVX2   | 3                 | 2.3                |
 | AVX512 | 2                 | 1.5                |
+
+![1578761507106](typora-images-assets/1578761507106.png)
 
 
 

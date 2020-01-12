@@ -5,8 +5,10 @@
 * [HPCG Official Release](https://www.hpcg-benchmark.org/index.html)
 * [HPCG Official Github](https://github.com/hpcg-benchmark/hpcg/)
 * The installation of HPCG is exactly the same way as HPL. For people who meet troubles in installing HPCG, you can have a try to install HPL first.
+* [top500: HPCG November 2019](https://www.top500.org/hpcg/lists/2019/11/)
 
 ### Installation Environment:
+
     Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox, 2GB Memory, HPCG 3.1
 
 ### 0. Install dependency
@@ -62,6 +64,28 @@ mpirun -np 4 ./xhpcg
 	# hpcg-3.1/build/bin/hpcg20191202T131917.txt
 	# hpcg-3.1/build/bin/HPCG-Benchmark_3.1_2019-12-02_13-20-15.txt
 ```
-## Reference Websites for HPCG Configurations
+
+
+## Also see
+
 * HPCG tests: https://www.cnblogs.com/zhyantao/p/10614243.html 
 * MPICH2 Configuration: https://www.cnblogs.com/zhyantao/p/10614237.html
+
+
+
+## Miscellaneous
+
+* Statistic of Top 10 super computer
+
+    |                   | Rmax(Tflops) | Rpeak(Tflops) | Efficiency | HPCG(Tflops) | HPCG Efficiency |
+    | ----------------- | ------------ | ------------- | ---------- | ------------ | --------------- |
+    | Summit            | 148600       | 200794.9      | 74%        | 2925.75      | 1.5%            |
+    | Sierra            | 94640        | 125712        | 75%        | 1795.67      | 1.4%            |
+    | Sunway TaihuLight | 93014.6      | 125435.9      | 74%        | 480.85       | 0.4%            |
+    | Tianhe-2A         | 61444.5      | 100678.7      | 61%        |              |                 |
+    | Frontera          | 23516.4      | 38745.9       | 61%        |              |                 |
+    | Piz Daint         | 21230        | 27154.3       | 78%        | 496.98       | 1.8%            |
+    | Trinity           | 20158.7      | 41461.2       | 49%        | 546.12       | 1.3%            |
+    | ABCI              | 19880        | 32576.6       | 61%        | 508.85       | 1.6%            |
+    | SuperMUC-NG       | 19476.6      | 26873.9       | 72%        | 207.84       | 0.8%            |
+    | Lassen            | 18200        | 23047.2       | 79%        |              |                 |

@@ -69,7 +69,7 @@ mkdir build
 cd build
 ../configure
 make -j 44 all
-make -j 44 install
+sudo make -j 44 install
 export LD_LIBRARY_PATH="/usr/local/lib"
 # test
 mpirun --version
@@ -89,14 +89,22 @@ mpirun --version
         #!/bin/bash
         HPCG_DIR=`pwd`
         HPCG_BIN=xhpcg-3.1_gcc_485_cuda-10.0.130_ompi-3.1.0_sm_35_sm_50_sm_60_sm_70_sm_75_ver_10_9_18
-        cp hpcg.dat_256x256x256_60 hpcg.dat 
+        
+        # Input
+        GPU_TYPE="RTX_2080_Ti"
+        GPU_NUM=4
+        export CUDA_VISIBLE_DEVICES=0,1,2,3
+        cat > hpcg.dat << EOF
+        HPCG benchmark input file
+        Sandia National Laboratories; University of Tennessee, Knoxville
+        128 128 128
+        60
+        EOF
         
         export OMP_NUM_THREADS=1
         MPIFLAGS=" --mca btl_openib_warn_default_gid_prefix 0"
         
-        echo " ****** running HPCG binary=$HPCG_BIN on 8 GPUs ***************************** "
-        export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
-        mpirun -np 8 $MPIFLAGS $HPCG_DIR/$HPCG_BIN | tee ./results/xhpcg_8_gpu.txt
+        mpirun -np $GPU_NUM $MPIFLAGS $HPCG_DIR/$HPCG_BIN | tee "./results/xhpcg_${GPU_NUM}_gpu-${GPU_TYPE}-$(date +"%G%m%d-%H%M%S").txt"
         ```
 
 * `chmod +x run`
@@ -111,9 +119,34 @@ mpirun --version
 
 
 
+#### Input Explain
+
+* `128 128 128` is problem size, limited by GPU Memory.
+
+    * |             | Memory (MiB) |
+        | ----------- | ------------ |
+        | 128 128 128 | 1163         |
+        | 192 192 192 | 3525         |
+        | 224 224 224 | 5151         |
+        | 256 256 256 | 8293         |
+        | 272 272 272 | 9265         |
+
+* `60` is test time, `60` for optimization, `3660` for official performance test.
+
+
+
 #### Output Explain
 
-* total =  810.5 GF (6146.1 GB/s Effective)  101.3 GF_per ( 768.3 GB/s Effective)
+* ```bash
+    SpMV  =  324.7 GF (2045.5 GB/s Effective)   81.2 GF_per ( 511.4 GB/s Effective)
+    SymGS =  405.6 GF (3131.2 GB/s Effective)  101.4 GF_per ( 782.8 GB/s Effective)
+    ```
+
+    * [hpcg: Performance Overview](https://www.hpcg-benchmark.org/custom/index.html?lid=158&slid=281)
+
+* ```bash
+    total =  810.5 GF (6146.1 GB/s Effective)  101.3 GF_per ( 768.3 GB/s Effective)
+    ```
+
     * `810.5 GF` is the speed of all GPUs combined.
     * `101.3 GF_per` is the speed of single GPU.
-

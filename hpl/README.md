@@ -7,6 +7,7 @@
 * [HPL Official Tuning Doc](http://www.netlib.org/benchmark/hpl/tuning.html)
 * [HPL Tuning Tool](https://www.advancedclustering.com/act_kb/tune-hpl-dat-file/)
 * [HPL Official Q&A](https://www.netlib.org/benchmark/hpl/faqs.html)
+* [top500: HPL November 2019](https://www.top500.org/lists/2019/11/)
 
 ### Installation Environment:
     Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox, 2GB Memory, HPL 2.3
@@ -111,6 +112,21 @@ mpiexec -n 4 ./xhpl
     * `TOTAL_TIME = Time + residual_check_time`
     * `residual_check_time ≈ Time × 0.12`
 
+* Statistic of Top 10 super computer
+
+    | Name              | Rmax(Tflops) | Rpeak(Tflops) | Efficiency |
+    | ----------------- | ------------ | ------------- | ---------- |
+    | Summit            | 148600       | 200794.9      | 74%        |
+    | Sierra            | 94640        | 125712        | 75%        |
+    | Sunway TaihuLight | 93014.6      | 125435.9      | 74%        |
+    | Tianhe-2A         | 61444.5      | 100678.7      | 61%        |
+    | Frontera          | 23516.4      | 38745.9       | 61%        |
+    | Piz Daint         | 21230        | 27154.3       | 78%        |
+    | Trinity           | 20158.7      | 41461.2       | 49%        |
+    | ABCI              | 19880        | 32576.6       | 61%        |
+    | SuperMUC-NG       | 19476.6      | 26873.9       | 72%        |
+    | Lassen            | 18200        | 23047.2       | 79%        |
+
 
 
 ## 7.2 Rpeak
@@ -153,13 +169,14 @@ $freq$ should be the AVX-512 Turbo Frequency, not the base frequency. Since AVX 
 
     The Base frequency is `2.2 GHz`, Turbo to `3.2 GHz`. But the *All-Core AVX-512 Turbo Frequency* is `1.5 GHz`, use that as the `CPU_freq`.
 
-    ![1578715606966](typora-images-assets/1578715606966.png)
+    ![1578678688267](typora-images-assets/1578678688267.png)
     
 * In fact, because of the lowering CPU frequency, often in `1×512-bit FMA Units` case, `AVX2` is much faster than `AVX512`
 
 * [software.intel: AVX512 slower than AVX2 with Intel MKL dgemm on Intel Gold 5118](https://software.intel.com/en-us/forums/software-tuning-performance-optimization-platform-monitoring/topic/815069)
 
 #### 7.2.3 factor - $flops/cycle$
+
 $$
 \frac{flops}{cycle}=\frac{operations}{instruction}×\frac{flops}{operation}
 $$
@@ -167,7 +184,7 @@ $$
 ​	[wikichip: flops](https://en.wikichip.org/wiki/flops)
 
 * `1×256-bit FMA Units ` carry on **8 $flops/cycle$**
-    
+  
     * $\frac{operations}{instruction}=4=vector\_size$
         * $vector\_size=4=\frac{256-bit\ FMA\ Register}{64-bit\ double\ pricision}$
     * $\frac{flops}{operation}=2=FMA\ Feature$

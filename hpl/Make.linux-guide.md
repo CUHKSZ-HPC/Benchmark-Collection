@@ -136,7 +136,7 @@ LINKFLAGS    =
 
 
 
-*  `Intel MPI`  or  `Intel KML`
+*  `Intel MPI`  or  `Intel MKL`
 
     *`mpiicc` is a wrapper of `icc (Intel C++ Compiler)`*
 
@@ -154,7 +154,7 @@ LINKFLAGS    = $(CCFLAGS) $(OMP_DEFS) -mt_mpi
 
 ## Part Five - Environment Variable
 
-* `Intel KML`
+* `Intel MKL`
 
     ```bash
     export MKL_NUM_THREADS=1
@@ -165,10 +165,11 @@ LINKFLAGS    = $(CCFLAGS) $(OMP_DEFS) -mt_mpi
     export MKL_ENABLE_INSTRUCTIONS=AVX2
     export MKL_ENABLE_INSTRUCTIONS=AVX512
     
-# export MKL_VERBOSE=1
+    export MKL_VERBOSE=1
     ```
-    
-    
+
+
+​    
 
 ## Others
 
