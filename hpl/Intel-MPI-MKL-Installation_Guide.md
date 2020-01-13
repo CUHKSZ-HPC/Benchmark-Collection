@@ -4,13 +4,13 @@
 
 You should Install [Intel® Parallel Studio XE for Linux*](https://software.intel.com/en-us/parallel-studio-xe/choose-download/student-linux-fortran), which Included `Intel® C++ Compiler`  `Intel® Math Kernel Library`  `Intel® MPI Library`.
 
-It is sad that it also include lots of unrelevent things, which occupys totally 17 GB. But this is the only way to install `Intel® C++ Compiler (icc)` , which is needed by `Intel MPI`.
+The whole package occupies 17 GB, you can custom to only install the needed component.
 
-You can install and use `Intel MKL` seperately, but somehow I found it behave strange when not compiled by `icc`.
+You can install and use `Intel MKL` separately, but somehow I found it behave strange when not compiled by `icc`.
 
 * ```bash
     # 1. Register and download Intel® Parallel Studio XE for Linux*
-    # 2. Get the serious number from Email ( my is S477-WWH887FH )
+    # 2. Get the serious number from Email ( levi: S477-WWH887FH, you may want to ask him first )
     # 3. Install
     ./install.sh
     ```

@@ -131,7 +131,7 @@ mpirun --version
         | 256 256 256 | 8293         |
         | 272 272 272 | 9265         |
 
-* `60` is test time, `60` for optimization, `3660` for official performance test.
+* `60` is test time. `60` for optimization, `3660` for official performance test.
 
 
 
@@ -150,3 +150,18 @@ mpirun --version
 
     * `810.5 GF` is the speed of all GPUs combined.
     * `101.3 GF_per` is the speed of single GPU.
+
+
+
+#### Statistic
+
+```bash
+# For HPCG-CUDA, total
+# The highest performance measured
+Tesla K40 = 34.7 Gflops 	# From HPCG-CUDA
+Tesla M40 = 43.7 Gflops	# From HPCG-CUDA
+GeFore RTX 2080 Ti = 101.3 Gflops
+Tesla P100 = 105.8 Gflops	# From HPCG-CUDA
+Tesla V100 = 154.9 Gflops	# From HPCG-CUDA
+```
+

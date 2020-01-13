@@ -6,12 +6,15 @@
 * [HPCG Official Github](https://github.com/hpcg-benchmark/hpcg/)
 * The installation of HPCG is exactly the same way as HPL. For people who meet troubles in installing HPCG, you can have a try to install HPL first.
 * [top500: HPCG November 2019](https://www.top500.org/hpcg/lists/2019/11/)
+* [intel: Intel® Optimized High Performance Conjugate Gradient Benchmark](https://software.intel.com/en-us/mkl-linux-developer-guide-intel-optimized-high-performance-conjugate-gradient-benchmark)
+* [paper: HPCG Benchmark:a New Metric for Ranking High Performance Computing Systems](http://www.netlib.org/utk/people/JackDongarra/PAPERS/HPCG-benchmark.pdf)
 
 ### Installation Environment:
 
     Ubuntu 18.04.2 LTS, 4.18.0-15-generic, x86_64, VirtualBox, 2GB Memory, HPCG 3.1
 
 ### 0. Install dependency
+
     sudo apt-get install -y libmpich-dev
 
 ### 1. Download HPCG
@@ -51,10 +54,15 @@ make -j $(nproc)
 
 ##### Modify `hpcg.dat` based on the text below (the original problem size is too large for 2GB memory):
 
-	HPCG benchmark input file
-	Sandia National Laboratories; University of Tennessee, Knoxville
-	16 16 16
-	60
+```s
+HPCG benchmark input file
+Sandia National Laboratories; University of Tennessee, Knoxville
+16 16 16
+60
+```
+* `16 16 16` is problem size, limited by system Memory.
+* `60` is test time. `60` for optimization, `1860` for official performance test.
+
 ##### Execute HPCG program
 
 ```bash
@@ -64,6 +72,13 @@ mpirun -np 4 ./xhpcg
 	# hpcg-3.1/build/bin/hpcg20191202T131917.txt
 	# hpcg-3.1/build/bin/HPCG-Benchmark_3.1_2019-12-02_13-20-15.txt
 ```
+
+##### Output Explain
+
+```bash
+Final Summary::HPCG result is VALID with a GFLOP/s rating of=13.9936
+```
+
 
 
 ## Also see
