@@ -3,7 +3,7 @@
 ```bash
 Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz,
 4 cores, Kaby Lake, 
-AVX2, FMA=2
+AVX2
 ```
 
 ![1578755569852](typora-images-assets/1578755569852.png)

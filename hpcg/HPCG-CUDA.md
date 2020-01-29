@@ -40,9 +40,9 @@ tar zxvf hpcg-3.1_cuda-10_ompi-3.1_gcc485_sm_35_sm_50_sm_60_sm_70_sm75_ver_10_9_
 ```bash
 wget https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda-repo-ubuntu1804-10-0-local-10.0.130-410.48_1.0-1_amd64
 mv cuda-repo-ubuntu1804-10-0-local-10.0.130-410.48_1.0-1_amd64 cuda-repo-ubuntu1804-10-0-local-10.0.130-410.48_1.0-1_amd64.deb
-sudo dpkg -i cuda-repo-ubuntu1804-10-0-local-10.0.130-410.48_1.0-1_amd64.deb
-# The following steps may be unnessary, havn't been test.
-sudo apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub
+sudo dpkg -i cuda-repo-ubuntu1804-10-0-local-10.0.130-410.48_1.0-1_amd64.deb   # unpack to /var/cuda-repo-10-0-local-10.0.130-410.48/
+
+sudo apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub    # register local repo to apt source
 sudo apt-get update
 sudo apt-get install cuda-libraries-10-0
 # test
@@ -67,15 +67,22 @@ tar -xzvf openmpi-3.1.0.tar.gz
 cd openmpi-3.1.0
 mkdir build
 cd build
-../configure
+../configure --prefix=/opt/openmpi-3.1.0	
+	# Install to /opt/openmpi-3.1.0
 make -j 44 all
 sudo make -j 44 install
-export LD_LIBRARY_PATH="/usr/local/lib"
+# export LD_LIBRARY_PATH="/usr/local/lib"
 # test
-mpirun --version
+/opt/openmpi-3.1.0/bin/mpirun --version
     mpirun (Open MPI) 3.1.0
     Report bugs to http://www.open-mpi.org/community/help/
 ```
+
+you may want to disable `source /opt/intel/compilers_and_libraries_2020.0.166/linux/bin/compilervars.sh intel64` first before installation.
+
+you may want to `sudo rm -rf /usr/local/lib/openmpi /usr/local/lib/libmca* /usr/local/lib/libmpi* /usr/local/lib/libompitrace* /usr/local/lib/libopen* /usr/local/lib/liboshmem* /usr/local/lib/mpi_*` remove the old version openmpi before installation. [github: issue 69](https://github.com/horovod/horovod/issues/69)
+
+[openmpi: install overwrite](https://www.open-mpi.org/faq/?category=building#install-overwrite)
 
 
 
@@ -83,17 +90,17 @@ mpirun --version
 
 * `cd hpcg-3.1_cuda-10_ompi-3.1_gcc485_sm_35_sm_50_sm_60_sm_70_sm75_ver_10_9_18`
 
-* `vim run`
+* `vim run_hpcg`
 
     * ```bash
         #!/bin/bash
         HPCG_DIR=`pwd`
         HPCG_BIN=xhpcg-3.1_gcc_485_cuda-10.0.130_ompi-3.1.0_sm_35_sm_50_sm_60_sm_70_sm_75_ver_10_9_18
         
-        # Input
         GPU_TYPE="RTX_2080_Ti"
-        GPU_NUM=4
-        export CUDA_VISIBLE_DEVICES=0,1,2,3
+        GPU_NUM=1
+        export CUDA_VISIBLE_DEVICES=0
+        PARAMETERS="128_128_128_60"
         cat > hpcg.dat << EOF
         HPCG benchmark input file
         Sandia National Laboratories; University of Tennessee, Knoxville
@@ -104,12 +111,12 @@ mpirun --version
         export OMP_NUM_THREADS=1
         MPIFLAGS=" --mca btl_openib_warn_default_gid_prefix 0"
         
-        mpirun -np $GPU_NUM $MPIFLAGS $HPCG_DIR/$HPCG_BIN | tee "./results/xhpcg_${GPU_NUM}_gpu-${GPU_TYPE}-$(date +"%G%m%d-%H%M%S").txt"
+        /opt/openmpi-3.1.0/bin/mpirun --allow-run-as-root -np $GPU_NUM $MPIFLAGS $HPCG_DIR/$HPCG_BIN | tee "./results/xhpcg_${GPU_NUM}_gpu-${GPU_TYPE}-${PARAMETERS}-$(date +"%G%m%d-%H%M%S").txt"
         ```
+    
+* `chmod +x run_hpcg`
 
-* `chmod +x run`
-
-* `./run`
+* `./run_hpcg`
 
     1. It takes about 7 minutes to complete `Reference CG...`, which use CPU.
     2. Then it takes 60 seconds to complete `Starting Benchmarking Phase...`, which use GPU.
@@ -130,6 +137,10 @@ mpirun --version
         | 224 224 224 | 5151         |
         | 256 256 256 | 8293         |
         | 272 272 272 | 9265         |
+        | 288 288 288 | 11008        |
+        | 320 320 320 | 14906        |
+        | 384 384 384 | 25428        |
+        | 400 400 400 | 28702        |
 
 * `60` is test time. `60` for optimization, `3660` for official performance test.
 

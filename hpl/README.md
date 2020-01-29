@@ -235,7 +235,11 @@ $$
 
     * [wikichip: intel](https://en.wikichip.org/wiki/intel)
 
-    
+* `2×512-bit FMA`  =  `FP64=32, FP32=64 (DL Train/Infer), FP16/INT16=128 (Train), INT8=256(Infer)`
+
+    * Not sure, need reference.
+
+
 
 #### Example - Xeon(R) Silver 4210
 
@@ -303,6 +307,10 @@ hpl-2.3/src/pgesv/HPL_pdgesv.c # `factors a N+1-by-N matrix using LU factorizati
 ↓
 hpl-2.3/src/pgesv/HPL_pdtrsv.c # core, `solves the upper triangular system of linear equations`, call cblas functions
 ```
+
+* `vtune` shows `85%` of time spent in `HPL_pdgesv(85)->HPL_pdgesv0(85)->HPL_pdupdateTT(72)->HPL_dgemm(68)->dgemm_kernel_HASWELL(63)`
+
+
 
 #### How does HPL calculation Gflops?
 
