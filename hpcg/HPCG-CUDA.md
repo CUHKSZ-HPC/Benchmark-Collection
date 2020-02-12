@@ -45,12 +45,9 @@ sudo dpkg -i cuda-repo-ubuntu1804-10-0-local-10.0.130-410.48_1.0-1_amd64.deb   #
 sudo apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub    # register local repo to apt source
 sudo apt-get update
 sudo apt-get install cuda-libraries-10-0
+	# we only install the needed libraries here
 # test
-/usr/local/cuda-10.0/bin/nvcc --version
-    nvcc: NVIDIA (R) Cuda compiler driver
-    Copyright (c) 2005-2018 NVIDIA Corporation
-    Built on Sat_Aug_25_21:08:01_CDT_2018
-    Cuda compilation tools, release 10.0, V10.0.130
+ls /usr/local/cuda-10.0/lib64/libcublas.so.10.0
 ```
 
 * Here I made a harmless mistake: I installed the 18.04 version, but everything worked fine.
@@ -176,3 +173,10 @@ Tesla P100 = 105.8 Gflops	# From HPCG-CUDA
 Tesla V100 = 154.9 Gflops	# From HPCG-CUDA
 ```
 
+
+
+
+
+## TODO
+
+https://on-demand-gtc.gputechconf.com/gtcnew/speakerName.php?speaker=Everett+Phillips

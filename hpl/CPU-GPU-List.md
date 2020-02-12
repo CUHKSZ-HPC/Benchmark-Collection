@@ -129,3 +129,13 @@ Thermal Solution:	Fan
 ```
 
 [whitepaper: NVIDIA Turing ARCHITECTURE](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/technologies/turing-architecture/NVIDIA-Turing-Architecture-Whitepaper.pdf)
+
+
+
+```bash
+nvidia-smi -i 0
+nvidia-smi -L
+
+
+```
+

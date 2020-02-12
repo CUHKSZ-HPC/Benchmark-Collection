@@ -356,4 +356,9 @@ Level 3 - matrix-matrix operation
 
 HPL-Intel.md
 
-HPL-CUDA.md
+
+
+https://community.arm.com/developer/tools-software/hpc/b/hpc-blog/posts/profiling-and-tuning-linpack-step-step-guide
+
+
+

@@ -30,3 +30,39 @@ You can install and use `Intel MKL` separately, but somehow I found it behave st
 
 Also, based on [packages.ubuntu: intel-mkl](https://packages.ubuntu.com/search?keywords=intel-mkl), starting from `Ubuntu 19.04`, you can `apt install intel-mkl`.
 
+
+
+## Update: 2020-2-11
+
+```bash
+	# 3 Install parallel_studio (Install Manually!!!)
+	echo "Install Intel® Parallel Studio Manually"
+	exit 0
+	cd /root/origin/parallel_studio_xe_2020_cluster_edition_online/
+	apt install cpio 
+			
+	# To see download speed: apt install nethogs
+	# To see download process (total 711M): watch -d -n1 "ls /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/rpm -lah | grep tota"
+	# If download speed is unpleasant: srync -av rpm_from_server_already_finished_Downlaod rpm_server_who_need_to_Download 
+		# This will work, install.sh is smart. Of cause a better way is tar -> scp -> untar
+		# rpm dir: /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/rpm
+		# tar zxvf /root/origin/parallel_studio_xe_2020_cluster_edition_rpm.tar.gz -C /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/
+
+	./install.sh
+		# 1 > q > accept > 2 > 1 > 1 > serial number > 1 > q > 
+		#  2 > 1 > 3 > 3 > a > a > 7 2 1 > 9 2 1 > 14 2 1> 1 > 1 > 1
+
+	# To skip interactive mode (by loading existing cfg file):
+		# cp /root/origin/intelCpp_intelMKL_intelMPI.cfg ./
+		# ./install.sh --silent=intelCpp_intelMKL_intelMPI.cfg
+		# To generate cfg file: ./install.sh --duplicate=test.cfg
+
+	source /opt/intel/compilers_and_libraries_2020.0.166/linux/bin/compilervars.sh intel64
+	echo "source /opt/intel/compilers_and_libraries_2020.0.166/linux/bin/compilervars.sh intel64" >> /root/.bashrc
+
+	# Some other ways to install Parallel Studio:
+		# https://cmg.cds.iisc.ac.in/parmoon/wordpress/wp-content/uploads/2019/10/parallel-studio-xe-2019u4-install-guide-lin.pdf
+		# https://software.intel.com/en-us/articles/installing-intel-parallel-studio-xe-runtime-2019-using-apt-repository
+		# https://software.intel.com/en-us/articles/installing-intel-parallel-studio-xe-runtime-2019-using-apt-repository
+	exit 0
+```
