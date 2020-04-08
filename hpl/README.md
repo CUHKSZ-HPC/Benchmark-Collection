@@ -394,7 +394,7 @@ cblas_daxpy - y = a*x + y
 cblas_dscal - x = a*x
 # Level 2
 cblas_dgemv - matrix vector multiply
-cblas_dger - performs the rank 1 operation A := alpha*x*y' + A
+cblas_dger - performs the rank 1 operation A := alpha*x*yT + A
 cblas_dtrsv - solving triangular matrix problems
 # Level 3
 cblas_dgemm - matrix matrix multiply
