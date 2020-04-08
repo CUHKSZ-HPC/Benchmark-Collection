@@ -19,7 +19,7 @@ Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz ×1, $378.00
 4 cores, Kaby Lake-2017, TDP=45 W
 AVX2
 		Base	Turbo-1	Turbo-all
-Normal	2.8		3.8		2.4
+Normal	2.8		3.8		3.4
 ```
 
 https://en.wikichip.org/wiki/intel/core_i7/i7-7700hq

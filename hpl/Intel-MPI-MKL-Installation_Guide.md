@@ -45,17 +45,22 @@ Also, based on [packages.ubuntu: intel-mkl](https://packages.ubuntu.com/search?k
 	# To see download process (total 711M): watch -d -n1 "ls /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/rpm -lah | grep tota"
 	# If download speed is unpleasant: srync -av rpm_from_server_already_finished_Downlaod rpm_server_who_need_to_Download 
 		# This will work, install.sh is smart. Of cause a better way is tar -> scp -> untar
-		# rpm dir: /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/rpm
-		# tar zxvf /root/origin/parallel_studio_xe_2020_cluster_edition_rpm.tar.gz -C /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/
+			# rpm dir: /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/rpm
+
+	mkdir -p /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/
+	tar zxvf /root/origin/parallel_studio_xe_2020_cluster_edition_rpm.tar.gz -C /tmp/root/parallel_studio_xe_2020_cluster_edition/parallel_studio_xe_2020_cluster_edition/
 
 	./install.sh
 		# 1 > q > accept > 2 > 1 > 1 > serial number > 1 > q > 
-		#  2 > 1 > 3 > 3 > a > a > 7 2 1 > 9 2 1 > 14 2 1> 1 > 1 > 1
+		#  2 > 1 > 3 > 3 > a > a > 7 2 1 > 9 2 1 > 14 2 1> 1 > y > 1
 
 	# To skip interactive mode (by loading existing cfg file):
 		# cp /root/origin/intelCpp_intelMKL_intelMPI.cfg ./
 		# ./install.sh --silent=intelCpp_intelMKL_intelMPI.cfg
-		# To generate cfg file: ./install.sh --duplicate=test.cfg
+			# To generate cfg file: ./install.sh --duplicate=test.cfg
+			# But it is not smart, it won't use the already downloaded rpm, wonders.
+
+	# The log is under /tmp/
 
 	source /opt/intel/compilers_and_libraries_2020.0.166/linux/bin/compilervars.sh intel64
 	echo "source /opt/intel/compilers_and_libraries_2020.0.166/linux/bin/compilervars.sh intel64" >> /root/.bashrc

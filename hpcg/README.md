@@ -20,22 +20,21 @@
 ### 1. Download HPCG
     cd ~
     wget http://www.hpcg-benchmark.org/downloads/hpcg-3.1.tar.gz
-    # unzip the .tar.gz file
-    mv hpcg-3.1 hpcg
+    tar zxvf hpcg-3.1.tar.gz
 
 ### 2. Generate HPCG template conffile
 ```bash
 # Working Dir: hpcg-3.1/setup
 cp Make.Linux_MPI Make.linux
 # These Files will be Generated:
-	# hpcg-3.1/Make.linux		# Compilation Configuration File
+	# hpcg-3.1/setup/Make.linux		# Compilation Configuration File
 ```
 
 ### 3. Modify `Make.linux` according to the text below
 
-    MPdir        = /usr/bin                                 # which mpicc
-    MPinc        = -I /usr/include/mpich/                   # dpkg --listfiles libmpich-dev | grep 'mpi\.h'
-    MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so    # dpkg --listfiles libmpich-dev | grep 'libmpich.so'
+    MPdir        = /usr/bin
+    MPinc        = -I /usr/include/mpich/
+    MPlib        = /usr/lib/x86_64-linux-gnu/libmpich.so
 
 ### 4. Compile HPCG
 ```bash

@@ -40,9 +40,9 @@ N=10000, NB=256, P=1, Q=1
 ```bash
 # Summery
 -np = 1, cpu_freq = 2.5 GHz, flops_PC = 16,
-Rpeak = 40 GHz, 
+Rpeak = 40 Gflops, 
 N=24000, NB=256, P=1, Q=1
-Rmax = 37.243 GHz, Efficiency = 93.1%
+Rmax = 37.243 Gflops, Efficiency = 93.1%
 ```
 
 
