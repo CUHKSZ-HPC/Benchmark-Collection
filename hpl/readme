@@ -1,0 +1,14 @@
+## HPL
+benchmark for float point calculation performance
+
+## Learn Path
+
+#### Novice
+man/Instl_1_basic.md
+man/Intro_1_basic.md
+man/Instl_2_makefile.md
+
+#### Advance
+man/Instl_3_MKL.md
+man/Instl_4_hpl_cuda.md
+man/Intro_2_Math.md

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#location of HPL 
+HPL_DIR=/root/levi/modified/hpl-cuda
+
+# Number of CPU cores ( per GPU used = per MPI process )
+CPU_CORES_PER_GPU=4
+# Number of GPU 
+export CUDA_VISIBLE_DEVICES=0
+
+export MKL_NUM_THREADS=$CPU_CORES_PER_GPU
+export GOTO_NUM_THREADS=$CPU_CORES_PER_GPU
+export OMP_NUM_THREADS=$CPU_CORES_PER_GPU
+
+export MKL_DYNAMIC=FALSE
+
+# Balance workload between CPU and GPU
+export CUDA_DGEMM_SPLIT=1.0
+export CUDA_DTRSM_SPLIT=1.0
+
+export LD_LIBRARY_PATH=$HPL_DIR/src/cuda:$LD_LIBRARY_PATH
+
+# -np should be GPU number
+# /usr/bin/time -p mpirun -np 1 $HPL_DIR/bin/linux-cuda/xhpl 2>&1 | tee -a result
+taskset --cpu-list 0-$CPU_CORES_PER_GPU /usr/bin/time -p mpirun -np 1 $HPL_DIR/bin/linux-cuda/xhpl 2>&1 | tee -a result
+# nice -n -19 taskset --cpu-list 0-$CPU_CORES_PER_GPU /usr/bin/time -p mpirun -np 1 $HPL_DIR/bin/linux-cuda/xhpl 2>&1 | tee -a result

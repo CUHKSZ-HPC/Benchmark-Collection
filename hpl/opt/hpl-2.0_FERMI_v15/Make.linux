@@ -1,0 +1,39 @@
+# Working File: hpl-2.0_FERMI_v15/Make.linux
+# Modify `TOPdir` !!!
+
+SHELL        = /bin/sh
+CD           = cd
+CP           = cp
+LN_S         = ln -fs
+MKDIR        = mkdir -p
+RM           = /bin/rm -f
+TOUCH        = touch
+ARCH         = linux
+ifndef  TOPdir
+TOPdir = /home/levi/Desktop/hpl-2.0_FERMI_v15
+endif
+INCdir       = $(TOPdir)/include
+BINdir       = $(TOPdir)/bin/$(ARCH)
+LIBdir       = $(TOPdir)/lib/$(ARCH)
+HPLlib       = $(LIBdir)/libhpl.a 
+
+LAdir        = /opt/intel/mkl/lib/intel64
+LAinc        =
+LAlib        = -L $(TOPdir)/src/cuda  -ldgemm -L/usr/local/cuda/lib64 -lcuda -lcudart -lcublas -L$(LAdir) -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5
+
+F2CDEFS      = -DAdd__ -DF77_INTEGER=int -DStringSunStyle
+HPL_INCLUDES = -I$(INCdir) -I$(INCdir)/$(ARCH) $(LAinc) $(MPinc) -I/usr/local/cuda/include
+
+HPL_LIBS     = $(HPLlib) $(LAlib) $(MPlib)
+HPL_OPTS     =  -DCUDA
+HPL_DEFS     = $(F2CDEFS) $(HPL_OPTS) $(HPL_INCLUDES)
+
+CC      = mpicc
+CCFLAGS = $(HPL_DEFS) -fomit-frame-pointer -O3 -funroll-loops -W -Wall -fopenmp
+CCNOOPT      = $(HPL_DEFS) -O0 -w
+LINKER       = $(CC)
+LINKFLAGS    = $(CCFLAGS) 
+ARCHIVER     = ar
+ARFLAGS      = r
+RANLIB       = echo
+MAKE = make TOPdir=$(TOPdir)
