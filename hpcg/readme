@@ -1,0 +1,10 @@
+## HPCG
+benchmark for float point calculation performance
+
+## Learn Path
+
+#### Novice
+man/Instl_1_basic.md
+AP-Collection/hpl/man/Instl_0_example.mp4
+man/Instl_2_cuda_hpcg.md
+man/Instl_3_intel_hpcg.md
